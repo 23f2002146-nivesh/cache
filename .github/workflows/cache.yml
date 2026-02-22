@@ -1,0 +1,31 @@
+name: Cache Prime Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  cache-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Cache dependencies
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/test-deps
+          key: cache-134167d
+
+      - name: prime-cache-134167d
+        run: |
+          if [ "${{ steps.cache.outputs.cache-hit }}" = "true" ]; then
+            echo "Cache hit"
+          else
+            echo "Cache miss"
+            mkdir -p ~/.cache/test-deps
+            echo "Priming cache" > ~/.cache/test-deps/sample.txt
+          fi
